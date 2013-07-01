@@ -5,34 +5,86 @@ class ParamsGuardException < Exception
 end
 
 
+class ParamsGuardParameters
 
-class ActionController::Parameters
-
-  alias_method :original, :[]
-
-  def [](param, klass=nil)
-
-
-    if klass # user wants us to run klass.func(params, session)
-
-      # session = ActionDispatch::Request.new(@env)
-      clog self.class.superclass
-
-      model = Kernel.const_get(klass.to_s)
-      callback = "params_guard"
-      model.send(callback, param, session) or
-        raise "#{klass}.#{callback} didn't return true"
-    end
-
-
-    original(param)
-
+  def initialize(old_params)
+    @old_params = old_params
   end
 
 
+  def [](param, klass=nil)
+
+    return @old_params[param] unless klass # user wants original params
+
+  end
+
+end
 
 
-end # module ParamsGuard
+
+class ActionController::Base
+
+  # seems we need to use a before filters because params doesn't exist yet
+  # before_action :setup
+
+  alias old_params params
+
+  def params
+    ParamsGuardParameters.new(old_params)
+  end
+
+  # def setup
+  #   clog params.class
+  # end
+
+end
+
+
+
+
+
+# ActiveSupport.on_load :action_controller do
+#   $stderr.puts 'on load'
+#   ActionController::Base.send :include, ParamsGuard
+# end
+
+# ActiveSupport.on_load :action_view do
+#   ActionView::Base.send :include, ParamsGuard
+# end
+
+
+
+# class ActionController::Parameters
+
+#   alias_method :original, :[]
+
+#   def [](param, klass=nil)
+
+
+#     if klass # user wants us to run klass.func(params, session)
+
+#       clog klass
+
+#       # session = ActionDispatch::Request.new
+#       clog session.class
+
+
+#       model = Kernel.const_get(klass.to_s)
+#       callback = "params_guard"
+#       model.send(callback, param, session) or
+#         raise "#{klass}.#{callback} didn't return true"
+
+#     end
+
+
+#     original(param)
+
+#   end
+
+
+
+
+# end # module ParamsGuard
 
 
 # class ActionController::Base
