@@ -53,3 +53,6 @@ Do this
 
 If the bad guy passes in an thing id that doesnt belong to account, instead of seeing
 private information, he'll get a rails error screen.
+
+
+Warning:  might work with nested params, like params[:thing, Thing][:id], but you'll need a smarter callback
