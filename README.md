@@ -21,7 +21,7 @@ use
     thing_id = params[:id, Thing]
 
 
-Along with returning thing_id, a callback in the Thing model is run, and is
+Before with returning thing_id, a callback in the Thing model is run, and is
 expected to return true.  If it doesn't return true, it raises a
 ParamsGuardException. You write the callback and put whatever you want in
 there.  Here's an example of checking if the id belongs to the current sessions
