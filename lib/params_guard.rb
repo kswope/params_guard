@@ -22,9 +22,8 @@ class ParamsGuardParameters < ActionController::Parameters
   def [](param, klass=nil)
 
     if klass
-      value = super(param)
-      process_guard(klass, value)
-      return value
+      process_guard(klass, self, param)
+      return super(param)
     else
       return super(param)
     end
@@ -35,10 +34,10 @@ class ParamsGuardParameters < ActionController::Parameters
   private #~~*~~*~~*~~*~~*~~*~~*~~*~~*
 
 
-  def process_guard(klass, param)
+  def process_guard(klass, params, param)
 
     model = Kernel.const_get(klass.to_s)
-    model.send(:params_guard, param, @session) or
+    model.send(:params_guard, param, params, @session) or
     raise "#{klass}.params_guard didn't return true"
 
   end
