@@ -21,10 +21,17 @@ class ParamsGuardParameters < ActionController::Parameters
 
   def [](param, klass=nil)
 
+
     if klass
       process_guard(klass, self, param)
       return super(param)
     else
+      Rails.logger.debug '======================'
+      Rails.logger.debug "param #{param}"
+      Rails.logger.debug "klass #{klass}"
+      Rails.logger.debug "before super(#{param})"
+      Rails.logger.debug super(param)
+      Rails.logger.debug 'after super(param)'
       return super(param)
     end
 
@@ -37,8 +44,17 @@ class ParamsGuardParameters < ActionController::Parameters
   def process_guard(klass, params, param)
 
     model = Kernel.const_get(klass.to_s)
-    model.send(:params_guard, param, params, @session) or
-    raise "#{klass}.params_guard didn't return true"
+
+    unless model.send(:params_guard, param, params, @session)
+
+      message = "#{klass}.params_guard didn't return true\n" +
+        "key: #{param}\nparams: #{params}\nsession: #{@session.inspect}"
+
+        Rails.logger.error message
+
+      raise ParamsGuardException, message
+
+    end
 
   end
 
@@ -50,7 +66,7 @@ end
 module ParamsGuard
 
   # Ripped off from StrongParameters source.
-  # 
+  #
   # Returns a new ActionController::Parameters object that has been
   # instantiated with the <tt>request.parameters</tt>.
   def params
@@ -61,4 +77,3 @@ end
 
 
 ActionController::Base.send :include, ParamsGuard
-
