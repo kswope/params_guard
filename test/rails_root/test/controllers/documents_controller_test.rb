@@ -42,7 +42,7 @@ class DocumentsControllerTest < ActionController::TestCase
   test 'update' do
 
 
-      post :update, :id => 1, :user => {:name => 'kevin'}
+      post :update, :id => 1, :user => {:name => 'kevin', :last => 'smith'}
 
 
   end

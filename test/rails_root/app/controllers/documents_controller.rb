@@ -4,15 +4,14 @@ class DocumentsController < ApplicationController
 
   def show
 
-    @document = Document.find(params[:id, Document])
+    @document = Document.find(pg[:id, Document])
 
   end
 
 
   def update
 
-    Rails.logger.debug "++++++++++++++++"
-    Rails.logger.debug params[:user]
+    clog pg[:id, Document]
 
     render :show
 

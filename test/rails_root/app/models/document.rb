@@ -4,9 +4,12 @@ class Document < ActiveRecord::Base
 
 
 
-  def self.params_guard(key, params, session)
+  def self.params_guard(key, value, session)
 
-    where(id: params[key], account_id: session[:aid]).any?
+    case key
+    when :id
+      where(id: value, account_id: session[:aid]).any?
+    end
 
   end
 

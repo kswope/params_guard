@@ -6,33 +6,34 @@ end
 
 
 
-class ParamsGuardParameters < ActionController::Parameters
+class ParamsGuardParameters < ActiveSupport::HashWithIndifferentAccess
 
 
-  def initialize(request_parameters, session)
+  def initialize(parameters, session)
 
-    # session wont be available in ActionController::Parameters so we will
-    # store it here.
-    @session = session
-    super(request_parameters)
+    @@session ||= session
+
+    super(parameters) # self is a hash, this will load it up
 
   end
 
 
-  def [](param, klass=nil)
+  def [](key, model = nil)
 
+    if super(key).is_a?(Hash)
 
-    if klass
-      process_guard(klass, self, param)
-      return super(param)
+      # this is for chains, like hash[:a][:b][:c, Doc]
+      return self.class.new(super(key), @@session)
+
     else
-      Rails.logger.debug '======================'
-      Rails.logger.debug "param #{param}"
-      Rails.logger.debug "klass #{klass}"
-      Rails.logger.debug "before super(#{param})"
-      Rails.logger.debug super(param)
-      Rails.logger.debug 'after super(param)'
-      return super(param)
+
+      if model
+        clog "processing guard with #{model}"
+        process_guard(model, key, super(key))
+      end
+
+      return super(key)
+
     end
 
   end
@@ -41,14 +42,14 @@ class ParamsGuardParameters < ActionController::Parameters
   private #~~*~~*~~*~~*~~*~~*~~*~~*~~*
 
 
-  def process_guard(klass, params, param)
+  def process_guard(model, key, value)
 
-    model = Kernel.const_get(klass.to_s)
+    # model = Kernel.const_get(model.to_s)
 
-    unless model.send(:params_guard, param, params, @session)
+    unless model.send(:params_guard, key, value, @@session)
 
-      message = "#{klass}.params_guard didn't return true\n" +
-        "key: #{param}\nparams: #{params}\nsession: #{@session.inspect}"
+      message = "*** Error: #{model}.params_guard didn't return true\n" +
+        "key: #{key}\nvalue: #{value}\nsession: #{@@session.inspect}"
 
         Rails.logger.error message
 
@@ -65,12 +66,9 @@ end
 
 module ParamsGuard
 
-  # Ripped off from StrongParameters source.
-  #
-  # Returns a new ActionController::Parameters object that has been
-  # instantiated with the <tt>request.parameters</tt>.
-  def params
-    @_params ||= ParamsGuardParameters.new(request.parameters, request.session)
+  def pg
+    @_pg_params ||=
+      ParamsGuardParameters.new(request.parameters, request.session)
   end
 
 end
