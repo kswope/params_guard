@@ -6,6 +6,10 @@ class Document < ActiveRecord::Base
 
   def self.params_guard(key, value, session)
 
+    clog key
+    clog value
+    clog session
+
     case key
     when :id
       where(id: value, account_id: session[:aid]).any?
