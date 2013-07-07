@@ -28,12 +28,6 @@ class ParamsGuardParameters < Hash
 
     key = key.to_s # very important, params values are always strings
 
-    # debugger
-    clog "key #{key}"
-    clog super(key)
-
-
-
     if super(key).is_a?(Hash) # recursion'ish
 
       # this is for chains, like hash[:a][:b][:c, Doc]
@@ -57,7 +51,6 @@ class ParamsGuardParameters < Hash
 
       end
 
-      clog "processing guard with #{model} and #{super(key)}"
       process_guard(model, key, super(key))
 
       return super(key)
