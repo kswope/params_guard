@@ -20,8 +20,10 @@ use
 Before returning thing_id, a callback in the Thing model is run, and is
 expected to return true.  If it doesn't return true, it raises a
 ParamsGuardException. You write the callback and put whatever you want in
-there.  Here's an example of checking if the id belongs to the current sessions
-account, which is found in session[:aid] 
+there.  
+
+Here's an example of checking if the id belongs to the current sessions
+account id, which is found in session[:aid] 
 
 In models/thing.rb:
 
@@ -71,3 +73,21 @@ if the current controller is DocumentsController.
 ParamsGuard doesn't know about attr_accessible or mass assignments but you
 could always call it without using the return value, expecting it raise an
 exception and interrupting any wrong doing.
+
+The params key, along with its value, and the session are passed into the callback.
+The session is there if you wan't to validate against some session data, like the
+account id, the key is there so you can have a more multiplexy callback, like
+
+In models/email.rb
+
+    def self.params_guard(key, value, session)
+
+      case key
+      when 'id'      
+        where(id: value, account_id: session[:aid]).any?
+      when 'email'
+        where(address: value, account_id: session[:aid]).any?
+      end
+
+    end
+
