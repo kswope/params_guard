@@ -11,7 +11,7 @@ class Document < ActiveRecord::Base
     clog session
 
     case key
-    when :id
+    when 'id'
       where(id: value, account_id: session[:aid]).any?
     end
 

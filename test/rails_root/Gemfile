@@ -7,6 +7,7 @@ gem 'rails', '4.0.0'
 gem 'params_guard', :path => '../..'
 gem 'clog'
 gem 'factory_girl_rails'
+# gem 'debugger'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
