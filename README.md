@@ -75,7 +75,7 @@ could always call it without using the return value, expecting it raise an
 exception and interrupting any wrong doing.
 
 The params key, along with its value, and the session, are passed into the
-callback.  The session is there if you wan't to validate against some session
+callback.  The session is there if you want to validate against some session
 data, like the account id, the key is there so you can have a more multiplexy
 callback, like
 
