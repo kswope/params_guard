@@ -1,14 +1,14 @@
 params_guard
 ============
 
-Are you paranoid about nefarious data in your params?  Do you hate doing joins just to validate
-your input?
+Are you paranoid about nefarious data in your params?  Do you hate doing joins
+just to validate your input?
 
 In Gemfile:
 
     gem "params_guard"
 
-instead of
+and instead of
 
     thing_id = params[:id]
 
@@ -34,8 +34,8 @@ In models/thing.rb:
 
 Now you can safely do simple ActiveRecord lookups, for example:
 
-Instead of doing this, in thing_controller.rb, where a bad guy can pass in a thing id that doesn't
-belong to him
+Instead of doing this, in thing_controller.rb, where a bad guy can pass in a
+thing id that doesn't belong to him
 
     def edit
       @thing = Thing.find( params[:id] )
@@ -47,16 +47,18 @@ Do this
       @thing = Thing.find( pg[:id, Thing] )
     end
 
-If the bad guy passes in an thing id that doesnt belong to account, instead of seeing
-private information, he'll get a rails error screen, because an uncaught exception is raised.
+If the bad guy passes in an thing id that doesnt belong to account, instead of
+seeing private information, he'll get a rails error screen, because an uncaught
+exception is raised from your callback.
 
 
 Works with nested parameters (that form_for thing)
 
     id = pg[:user][:document_id, Document]
 
-ParamsGuard tries guessing at the model name, so in the controller DocumentsController you can
-omit the Model and it guesses using the controllers name
+ParamsGuard tries guessing at the model name, so in the controller
+DocumentsController you can omit the Model and it guesses using the controllers
+name
 
     id = pg[:id]
 
@@ -66,6 +68,6 @@ same as
 
 if the current controller is DocumentsController.
 
-ParamsGuard doesn't know about attr_accessible or mass assignments but you could always
-call it without using the return value, expecting it raise an exception and interrupting
-any wrong doing.
+ParamsGuard doesn't know about attr_accessible or mass assignments but you
+could always call it without using the return value, expecting it raise an
+exception and interrupting any wrong doing.
