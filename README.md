@@ -8,11 +8,6 @@ In Gemfile:
 
     gem "params_guard"
 
-
-when a URL like this is accessed
-
-    http://somewhere.com/show_thing/123
-
 instead of
 
     thing_id = params[:id]
