@@ -14,7 +14,7 @@ class DocumentsController < ApplicationController
 
   def show_with_model_nested
 
-    @document = Document.find(pg[:user][:id, Document])
+    @document = Document.find( pg[:user][:id, Document] )
 
     render :text => nil
 

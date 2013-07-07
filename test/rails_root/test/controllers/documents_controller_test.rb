@@ -7,71 +7,73 @@ class DocumentsControllerTest < ActionController::TestCase
 
   setup do
 
-    @@account = FactoryGirl.create(:account)
-    @@document = FactoryGirl.create(:document, :account => @@account)
+    @@right_account = FactoryGirl.create(:account)
+    @@right_document = FactoryGirl.create(:document, :account => @@right_account)
+
+    @@wrong_account = FactoryGirl.create(:account)
+    @@wrong_document = FactoryGirl.create(:document, :account => @@wrong_account)
 
     # set session indicating we've logged in as @@account
-    session[:aid] = @@account.id
+    session[:aid] = @@right_account.id
 
   end
 
 
 
-  test 'show with model with correct id' do
+  test 'show with model with right document' do
 
-    get :show_with_model, :id => @@document
-    assert_equal @@document, assigns(:document)
+    get :show_with_model, :id => @@right_document
+    assert_equal @@right_document, assigns(:document)
 
   end
 
 
 
-  test 'show with model with incorrect id' do
+  test 'show with model with wrong document' do
 
     assert_raises(ParamsGuardException) do
-      get :show_with_model, :id => @@document.id + 1  # should not exist
+      get :show_with_model, :id => @@wrong_document
     end
 
   end
 
 
 
-  test 'show with model with nested param correct id' do
+  test 'show with model with nested param with right document' do
 
-    get :show_with_model_nested, :user => {:id => @@document.id}
-    assert_equal @@document, assigns(:document)
+    get :show_with_model_nested, :user => {:id => @@right_document}
+    assert_equal @@right_document, assigns(:document)
 
   end
 
 
 
-  test 'show with model with nested param incorrect id' do
+  test 'show with model with nested param with wrong document' do
 
     assert_raises(ParamsGuardException) do
-      get :show_with_model_nested, :user => {:id => @@document.id + 1}
+      get :show_with_model_nested, :user => {:id => @@wrong_document}
     end
 
   end
 
 
 
-  test 'show without model with correct id' do
+  test 'show without model with right document' do
 
-    get :show_without_model, :id => @@document
-    assert_equal @@document, assigns(:document)
+    get :show_without_model, :id => @@right_document
+    assert_equal @@right_document, assigns(:document)
 
   end
 
 
 
-  test 'show without model with incorrect id' do
+  test 'show without model with wrong document' do
 
     assert_raises(ParamsGuardException) do
-      get :show_without_model, :id => @@document
+      get :show_without_model, :id => @@wrong_document
     end
 
   end
-
 
 
 

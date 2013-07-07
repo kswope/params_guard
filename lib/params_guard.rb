@@ -32,29 +32,30 @@ class ParamsGuardParameters < Hash
     clog "key #{key}"
     clog super(key)
 
-    unless model # then figure out the model we are supposed to use
-
-      controller =  super('controller') # using :controller recurses, why?
-
-      klass = controller.singularize.capitalize
-
-      begin
-        model = Kernel.const_get(klass.to_s)
-      rescue NameError
-        message = "Couldn't figure out model from controller, "
-        message <<  "tried #{klass} but it doesn't exist"
-        log_and_raise(message)
-      end
-
-    end
 
 
     if super(key).is_a?(Hash) # recursion'ish
 
       # this is for chains, like hash[:a][:b][:c, Doc]
-      return self.class.new(super(key), @@session)
+      return self.class[super(key), @@session]
 
     else
+
+      unless model # then figure out the model we are supposed to use
+
+        controller =  super('controller')
+
+        klass = controller.singularize.capitalize
+
+        begin
+          model = Kernel.const_get(klass.to_s)
+        rescue NameError
+          message = "Couldn't figure out model from controller, "
+          message <<  "tried #{klass} but it doesn't exist"
+          log_and_raise(message)
+        end
+
+      end
 
       clog "processing guard with #{model} and #{super(key)}"
       process_guard(model, key, super(key))
