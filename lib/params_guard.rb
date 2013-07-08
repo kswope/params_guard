@@ -14,7 +14,7 @@ class ParamsGuardParameters < Hash
   #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   def self.[](parameters, session)
 
-    @@session ||= session
+    @@session = session
 
     super(parameters)
 
