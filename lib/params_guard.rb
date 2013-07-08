@@ -110,3 +110,4 @@ end
 
 
 ActionController::Base.send :include, ParamsGuard
+ActionView::Base.send :include, ParamsGuard
