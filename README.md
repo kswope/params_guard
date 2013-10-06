@@ -77,7 +77,7 @@ exception and interrupting any wrong doing.
 The params key, along with its value, and the session, are passed into the
 callback.  The session is there if you want to validate against some session
 data, like the account id. The key is there so you can have a more multiplexy
-callback, like
+callback, for example:
 
 In models/email.rb
 
