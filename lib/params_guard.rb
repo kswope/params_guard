@@ -72,7 +72,7 @@ class ParamsGuardParameters < Hash
     unless model.send(:params_guard, key, value, @@session)
 
       message = "*** Error: #{model}.params_guard didn't return true\n"
-      message << "key: #{key} (must be a string!)\n"
+      message << "key: #{key}\n"
       message << "value: #{value}\n"
       # message << "session: #{@@session.inspect}"
 
