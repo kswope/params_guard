@@ -74,7 +74,7 @@ class ParamsGuardParameters < Hash
       message = "*** Error: #{model}.params_guard didn't return true\n"
       message << "key: #{key} (a string!)\n"
       message << "value: #{value}\n"
-      message << "session: #{@@session.inspect}"
+      # message << "session: #{@@session.inspect}"
 
       log_and_raise(message)
 
